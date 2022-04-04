@@ -12,7 +12,7 @@ const produitSchema = new mongoose.Schema({
         type: String
     },
     prixVente: {
-        type: real,
+        type: Number,
         default: 0
     }
 });

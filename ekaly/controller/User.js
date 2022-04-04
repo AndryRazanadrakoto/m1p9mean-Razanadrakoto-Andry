@@ -1,28 +1,10 @@
 const express = require("express");
-require("dotenv").config();
+
 const User = require("../model/User");
 const app = express();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-/* app.post("/sign_in", async (request, response) => {
-    const user = new userModel(request.body);
-  
-    try {
-      await user.save();
-      response.send(user);
-    } catch (error) {
-      response.status(500).send(error);
-    }
-});
-app.get("/login", async (request, response) => {
-    const users = await userModel.find({});
-  
-    try {
-      response.send(users);
-    } catch (error) {
-      response.status(500).send(error);
-    }
-  }); */
+
 app.post("/register", async (req, res) => {
 
     // Our register logic starts here
@@ -32,14 +14,14 @@ app.post("/register", async (req, res) => {
         
         // Validate user input
         if (!(email && password && name)) {
-            res.status(400).send("All input is required");
+            res.status(400).send("Tous les champs doit etre remplis");
         }
         email = email.toLowerCase();
         // check if user already exist
         // Validate if user exist in our database
         const oldUser = await User.findOne({ email });
         if (oldUser) {
-            return res.status(409).send("User Already Exist. Please Login");
+            return res.status(409).send("L'utilisateur existe deja. Veuiller vous connecter");
         }
 
         //Encrypt user password
@@ -55,7 +37,7 @@ app.post("/register", async (req, res) => {
        
         // Create token
         const token = jwt.sign(
-        { user_id: user._id, email },
+        { user_id: user._id, email,role: user.role },
             process.env.TOKEN_KEY,
         {
             expiresIn: "2h",
@@ -64,7 +46,6 @@ app.post("/register", async (req, res) => {
         // save user token
         user.token = token;
         // return new user
-        console.log(user);
         res.status(201).send(user);
     } catch (err) {
       console.log(err);
@@ -89,10 +70,10 @@ app.post("/login", async (req, res) => {
         if (user && (await bcrypt.compare(password, user.password))) {
         // Create token
             const token = jwt.sign(
-                { user_id: user._id, email },
+                { user_id: user._id, email,role: user.role },
                 process.env.TOKEN_KEY,
                 {
-                expiresIn: "2h",
+                    expiresIn: "2h",
                 }
             );
 

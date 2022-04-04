@@ -1,7 +1,8 @@
 const express = require("express");
 const produitModel = require("../model/Produit");
 const app = express();
-app.post("/listeProduit", async (request, response) => {
+const auth = require("../middleware/auth");
+app.post("/add",auth('ekaly','admin'), async (request, response) => {
     const produit = new produitModel(request.body);
   
     try {
@@ -11,14 +12,21 @@ app.post("/listeProduit", async (request, response) => {
       response.status(500).send(error);
     }
 });
-app.get("/addProduit", async (request, response) => {
+app.get("/",auth(['ekaly','admin']), async (request, response) => {
     const produits = await produitModel.find({});
-  
+    try {
+      response.send(produits);
+    } catch (error) {
+      response.status(500).send(error);
+    }
+});
+app.post("/update",auth, async (request, response) => {
+    const produits = await produitModel.find({});
     try {
       response.send(produits);
     } catch (error) {
       response.status(500).send(error);
     }
   });
-  module.exports = app;
+module.exports = app;
   

@@ -10,13 +10,16 @@ const UserSchema = new mongoose.Schema({
     unique: true
   },
   password: { 
-    type: String 
+    type: String,
+    required: true
   },
   token: { 
     type: String 
   },
   role: {
-    type: String
+    type: String,
+    default: 'basic',
+    enum: ["client", "ekaly","restaurant", "admin","livreur"]
   }
 });
 
