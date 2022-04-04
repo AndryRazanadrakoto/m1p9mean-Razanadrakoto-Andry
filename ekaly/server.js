@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Router = require("./route")
+var Router = require('./app');
 
 const app = express();
 
@@ -19,4 +19,5 @@ app.use(Router);
 
 app.listen(3000, () => {
   console.log("Server is running at port 3000");
+  const all_routes = require('express-list-endpoints');
 });
